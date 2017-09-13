@@ -1,7 +1,7 @@
 import ceylon.test { ... }
 
-// Tests adapted from x-common version 1.0.0
-{[String, String|Error]*} cases => {
+// Tests adapted from problem-specifications version 1.0.1
+{[String, String|Null]*} cases => {
   // empty strand
   ["",                         ""],
   // single C nucleotide strand
@@ -14,20 +14,20 @@ import ceylon.test { ... }
   ["T",                       "A"],
   // longer strand
   ["ACGTGGTCTTAA", "UGCACCAGAAUU"],
+  // strand with DNA nucleotides
+  ["U",                      null],
   // strand with invalid nucleotides
-  ["XCGFGGTDTTAA",        Error()],
+  ["XCGFGGTDTTAA",           null],
   // strand with invalid nucleotides after the first nucleotide
-  ["ACGTFGTBTEAA",        Error()]
+  ["ACGTFGTBTEAA",           null]
 };
 
 test
 parameters(`value cases`)
-void testHamming(String dna, String|Error expected) {
-  String|Error result = transcription(dna);
-
-  if(is String expected) {
-    assertEquals(result, expected);
-  } else if(!is Error result) {
+void testHamming(String dna, String|Null expected) {
+  if (exists expected) {
+    assertEquals(transcription(dna), expected);
+  } else if (!is Error result = transcription(dna)) {
     fail("should have errored, but got ``result``");
   }
 }
